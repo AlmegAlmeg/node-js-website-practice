@@ -4,6 +4,7 @@ const { registerSchema, loginSchema } = require('../validation/userValidation')
 const { createHash, compareHash } = require('../config/bcrypt')
 const { createToken } = require('../config/jwt')
 const User = require('../DB/userModel')
+const authMiddleware = require('../middleware/authMiddleware')
 
 router.post('/register', async (req,res) => {
     try {
@@ -41,6 +42,15 @@ router.post('/login', async (req,res) => {
             adminLevel: checkEmail[0].adminLevel
         })
         res.status(200).send(token)
+    } catch (err) {
+        res.status(400).json({ message: err })
+    }
+})
+
+router.get('/', authMiddleware, async (req,res) => {
+    try {
+        const currentUser = await User.findOne({ userName: req.user.userName })
+        res.status(200).send(currentUser)
     } catch (err) {
         res.status(400).json({ message: err })
     }
