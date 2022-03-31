@@ -12,8 +12,10 @@ app.listen(PORT, ()=> console.log(`Server is running on port ${PORT}`))
 
 const usersRouter = require('./routes/users')
 const adsRouter = require('./routes/ads')
+const adminsRouter = require('./routes/admins')
 
 app.use('/api/users', usersRouter)
 app.use('/api/ads', adsRouter)
+app.use('/api/admins', adminsRouter)
 
 module.exports = app

@@ -56,4 +56,23 @@ router.get('/', authMiddleware, async (req,res) => {
     }
 })
 
+router.put('/:id', authMiddleware, async (req,res)=>{
+    try {
+        const { id } = req.params
+        const currentUser = await User.findOne({ userName: req.user.userName })
+        if(id !== currentUser.id) throw "Your are not allowed to change this user's details"
+
+        let updatedUser = await registerSchema.validateAsync(req.body, { abortEarly: false })
+        updatedUser.password = await createHash(updatedUser.password)
+        const { adminLevel } = await User.findByIdAndUpdate(id, updatedUser)
+        const token = await createToken({
+            userName: updatedUser.userName,
+            adminLevel: adminLevel
+        })
+        res.status(200).send(token)
+    } catch (err) {
+        res.status(400).json({ message: err })
+    }
+})
+
 module.exports = router

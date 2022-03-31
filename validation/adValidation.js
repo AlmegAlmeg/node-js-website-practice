@@ -5,7 +5,7 @@ const newAdSchema = Joi.object({
     phone: Joi.string().min(8).max(11).required(),
     address: Joi.string().required(),
     notes: Joi.array(),
-    isAvaliable: Joi.boolean()
+    isAvailable: Joi.boolean()
 })
 
 module.exports = {
